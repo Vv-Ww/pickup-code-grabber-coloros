@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="WidgetRowText">
+        <item name="android:paddingLeft">2dp</item>
+        <item name="android:maxLines">2</item>
+        <item name="android:lineSpacingMultiplier">1.05</item>
+        <item name="android:textColor">#D9000000</item>
+        <item name="android:textSize">12sp</item>
+    </style>
+
+    <style name="WidgetTake">
+        <item name="android:background">#26FFFFFF</item>
+        <item name="android:textColor">#B30B6E4F</item>
+        <item name="android:textSize">10sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:paddingLeft">6dp</item>
+        <item name="android:paddingRight">6dp</item>
+        <item name="android:paddingTop">2dp</item>
+        <item name="android:paddingBottom">2dp</item>
+        <item name="android:layout_marginEnd">6dp</item>
+        <item name="android:clickable">true</item>
+        <item name="android:focusable">false</item>
+    </style>
+</resources>

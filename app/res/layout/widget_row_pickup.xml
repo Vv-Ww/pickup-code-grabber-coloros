@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 小组件列表行：仅正文（取走/删除请到应用“取件码记录”操作） -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/row_root"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center_vertical"
+    android:minHeight="26dp"
+    android:orientation="horizontal"
+    android:clickable="true"
+    android:focusable="false"
+    android:paddingBottom="2dp"
+    android:paddingTop="2dp">
+
+    <TextView
+        android:id="@+id/row_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:maxLines="2"
+        android:lineSpacingMultiplier="1.05"
+        android:textColor="#D9000000"
+        android:textSize="12sp" />
+</LinearLayout>

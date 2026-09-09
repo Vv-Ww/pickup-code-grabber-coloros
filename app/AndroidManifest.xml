@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="io.github.okaidev.pickupcode"
+    android:versionCode="291"
+    android:versionName="2.20.0-widget">
+
+    <uses-sdk android:minSdkVersion="28" android:targetSdkVersion="34" />
+
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <!-- v2.5.1：唯一联网行为 = 检查更新（3 天一次，GitHub Releases API），无其他网络访问 -->
+    <uses-permission android:name="android.permission.INTERNET" />
+
+    <!-- v2.7.0：包可见性声明（Android 11+），保证后端探测能准确找到各 ROM 的目标 App -->
+    <queries>
+        <package android:name="com.coloros.note" />
+        <package android:name="com.miui.notes" />
+    </queries>
+
+    <application
+        android:label="取件码助手"
+        android:icon="@mipmap/ic_launcher"
+        android:allowBackup="false"
+        android:supportsRtl="true">
+
+        <!-- Xposed/LSPosed 模块声明 -->
+        <meta-data
+            android:name="xposedmodule"
+            android:value="true" />
+        <meta-data
+            android:name="xposeddescription"
+            android:value="自动提取快递取件码，写入待办（小米笔记 / ColorOS 日历·便签，自动识别）" />
+        <meta-data
+            android:name="xposedminversion"
+            android:value="82" />
+        <meta-data
+            android:name="xposedscope"
+            android:resource="@array/xposed_scope" />
+
+        <!-- 跨进程事实入口：Hook 进程通过 ContentResolver.call 唤醒模块 App -->
+        <provider
+            android:name=".TodoProvider"
+            android:authorities="io.github.okaidev.pickupcode.provider"
+            android:exported="true" />
+
+        <!-- 短信事件接收器（Hook 进程广播 → 模块自身进程处理，兜底通道） -->
+        <receiver
+            android:name=".SmsEventReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="io.github.okaidev.pickupcode.action.ON_SMS" />
+            </intent-filter>
+        </receiver>
+
+        <!-- 桌面小组件（v2.8）：取件码列表，点击打开设置页 -->
+        <receiver
+            android:name=".PickupWidgetProvider"
+            android:exported="false"
+            android:label="取件码助手小组件"
+            android:icon="@mipmap/ic_launcher">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/widget_pickup_info" />
+        </receiver>
+
+        <activity
+            android:name=".LauncherActivity"
+            android:exported="true"
+            android:excludeFromRecents="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <!-- 打赏页（v2.5.0）：右上角菜单进入，不对外暴露 -->
+        <activity
+            android:name=".DonateActivity"
+            android:exported="false" />
+
+        <!-- v2.9：取件码记录页 / 小组件设置（configure 需 exported） -->
+        <activity
+            android:name=".PickupListActivity"
+            android:exported="false"
+            android:label="取件码记录"
+            android:excludeFromRecents="true" />
+        <activity
+            android:name=".PickupSettingsActivity"
+            android:exported="true"
+            android:label="小组件设置"
+            android:excludeFromRecents="true" />
+
+        <!-- v2.10：小组件可滚动列表数据源（宿主绑定需该权限） -->
+        <service
+            android:name=".PickupWidgetService"
+            android:exported="true"
+            android:permission="android.permission.BIND_REMOTEVIEWS" />
+    </application>
+</manifest>
