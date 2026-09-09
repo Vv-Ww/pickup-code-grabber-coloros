@@ -25,9 +25,7 @@ import android.widget.Toast;
 public class PickupSettingsActivity extends Activity {
 
     private String target = PickupConfig.TARGET_BOTH;
-    private String size = PickupWidgetProvider.SIZE_MEDIUM;
     private TextView btnBoth, btnCalendar, btnWidget;
-    private TextView btnSmall, btnMedium, btnLarge;
     private EditText fontEt;
     private TextView preview;
     private int appWidgetId = android.appwidget.AppWidgetManager.INVALID_APPWIDGET_ID;
@@ -98,23 +96,6 @@ public class PickupSettingsActivity extends Activity {
         });
 
         root.addView(space(18));
-        root.addView(label("组件尺寸预设（保存后生效）"));
-        root.addView(space(6));
-        LinearLayout sizeRow = new LinearLayout(this);
-        sizeRow.setOrientation(LinearLayout.HORIZONTAL);
-        btnSmall = segBtn("小(2×2)", PickupWidgetProvider.SIZE_SMALL);
-        btnMedium = segBtn("中(4×2)", PickupWidgetProvider.SIZE_MEDIUM);
-        btnLarge = segBtn("大(5×3)", PickupWidgetProvider.SIZE_LARGE);
-        sizeRow.addView(btnSmall); sizeRow.addView(btnMedium); sizeRow.addView(btnLarge);
-        root.addView(sizeRow);
-        TextView sizeHint = new TextView(this);
-        sizeHint.setText("保存即调整到该尺寸；之后也可在桌面长按组件拖拽微调。");
-        sizeHint.setTextSize(TypedValue.COMPLEX_UNIT_SP, 11);
-        sizeHint.setTextColor(Color.parseColor("#999999"));
-        root.addView(sizeHint);
-        restyle();
-
-        root.addView(space(18));
         LinearLayout btnRow = new LinearLayout(this);
         btnRow.setOrientation(LinearLayout.HORIZONTAL);
         TextView save = new TextView(this);
@@ -131,7 +112,6 @@ public class PickupSettingsActivity extends Activity {
             try { sp = Float.parseFloat(fontEt.getText().toString().trim()); } catch (Throwable ignored) { }
             PickupConfig.setWidgetFont(this, sp);
             PickupConfig.setWriteTarget(this, target);
-            PickupWidgetProvider.applyPreset(this, size);
             PickupWidgetProvider.updateAll(this);
             // configure 正确返回：携带 widget id + RESULT_OK，否则组件会被系统当作“取消”而消失
             android.content.Intent result = new android.content.Intent();
@@ -183,8 +163,6 @@ public class PickupSettingsActivity extends Activity {
             if (val2.equals(PickupConfig.TARGET_BOTH) || val2.equals(PickupConfig.TARGET_CALENDAR)
                     || val2.equals(PickupConfig.TARGET_WIDGET)) {
                 target = val2;
-            } else {
-                size = val2;
             }
             restyle();
         });
@@ -195,9 +173,6 @@ public class PickupSettingsActivity extends Activity {
         styleSeg(btnBoth, target, PickupConfig.TARGET_BOTH);
         styleSeg(btnCalendar, target, PickupConfig.TARGET_CALENDAR);
         styleSeg(btnWidget, target, PickupConfig.TARGET_WIDGET);
-        styleSeg(btnSmall, size, PickupWidgetProvider.SIZE_SMALL);
-        styleSeg(btnMedium, size, PickupWidgetProvider.SIZE_MEDIUM);
-        styleSeg(btnLarge, size, PickupWidgetProvider.SIZE_LARGE);
     }
 
     private void styleSeg(TextView b, String cur, String mine) {

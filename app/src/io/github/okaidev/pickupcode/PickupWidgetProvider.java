@@ -20,12 +20,7 @@ public class PickupWidgetProvider extends AppWidgetProvider {
 
     public static final String ACTION_TAKE = "io.github.okaidev.pickupcode.WIDGET_TAKE";
     public static final String ACTION_OPEN = "io.github.okaidev.pickupcode.WIDGET_OPEN";
-    public static final String ACTION_RESIZE = "io.github.okaidev.pickupcode.WIDGET_RESIZE";
     public static final String EXTRA_CODE = "code";
-
-    public static final String SIZE_SMALL = "small";
-    public static final String SIZE_MEDIUM = "medium";
-    public static final String SIZE_LARGE = "large";
 
     @Override
     public void onUpdate(Context context, AppWidgetManager mgr, int[] appWidgetIds) {
@@ -51,42 +46,7 @@ public class PickupWidgetProvider extends AppWidgetProvider {
             String code = intent.getStringExtra(EXTRA_CODE);
             android.util.Log.i("PICKUPDEBUG", "WIDGET-TAKE code=" + code);
             if (code != null && !code.isEmpty()) takeDone(context, code);
-        } else if (ACTION_RESIZE.equals(intent.getAction())) {
-            applyPreset(context, intent.getStringExtra(EXTRA_CODE));
         }
-    }
-
-    public static void applyPreset(Context context, String preset) {
-        Context app = context.getApplicationContext();
-        if (preset == null) return;
-        AppWidgetManager mgr = AppWidgetManager.getInstance(app);
-        int[] ids = mgr.getAppWidgetIds(new ComponentName(app, PickupWidgetProvider.class));
-        if (ids == null) return;
-        int dp = (int) (app.getResources().getDisplayMetrics().density + 0.5f);
-        android.os.Bundle opts = new android.os.Bundle();
-        switch (preset) {
-            case SIZE_SMALL:
-                opts.putInt(AppWidgetManager.OPTION_APPWIDGET_MIN_WIDTH, 150 * dp);
-                opts.putInt(AppWidgetManager.OPTION_APPWIDGET_MIN_HEIGHT, 110 * dp);
-                opts.putInt(AppWidgetManager.OPTION_APPWIDGET_MAX_WIDTH, 260 * dp);
-                opts.putInt(AppWidgetManager.OPTION_APPWIDGET_MAX_HEIGHT, 180 * dp);
-                break;
-            case SIZE_LARGE:
-                opts.putInt(AppWidgetManager.OPTION_APPWIDGET_MIN_WIDTH, 420 * dp);
-                opts.putInt(AppWidgetManager.OPTION_APPWIDGET_MIN_HEIGHT, 220 * dp);
-                opts.putInt(AppWidgetManager.OPTION_APPWIDGET_MAX_WIDTH, 600 * dp);
-                opts.putInt(AppWidgetManager.OPTION_APPWIDGET_MAX_HEIGHT, 420 * dp);
-                break;
-            case SIZE_MEDIUM:
-            default:
-                opts.putInt(AppWidgetManager.OPTION_APPWIDGET_MIN_WIDTH, 260 * dp);
-                opts.putInt(AppWidgetManager.OPTION_APPWIDGET_MIN_HEIGHT, 140 * dp);
-                opts.putInt(AppWidgetManager.OPTION_APPWIDGET_MAX_WIDTH, 400 * dp);
-                opts.putInt(AppWidgetManager.OPTION_APPWIDGET_MAX_HEIGHT, 240 * dp);
-                break;
-        }
-        for (int id : ids) mgr.updateAppWidgetOptions(id, opts);
-        updateAll(app);
     }
 
     private static void takeDone(Context context, String code) {
